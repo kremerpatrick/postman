@@ -1,0 +1,173 @@
+{
+	"info": {
+		"_postman_id": "00c9e9c4-4b45-4a30-90c3-de92da1fbbee",
+		"name": "NSX-T-BGP-Filter",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Show VMC T0 BGP Neighbors",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{nsxmgr}}/policy/api/v1/infra/tier-0s/{{tier-0-id}}/locale-services/{{locale-service-id}}/bgp/neighbors",
+					"protocol": "https",
+					"host": [
+						"{{nsxmgr}}"
+					],
+					"path": [
+						"policy",
+						"api",
+						"v1",
+						"infra",
+						"tier-0s",
+						"{{tier-0-id}}",
+						"locale-services",
+						"{{locale-service-id}}",
+						"bgp",
+						"neighbors"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Show BGP Prefix Lists",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{nsxmgr}}/policy/api/v1/infra/tier-0s/{{tier-0-id}}/prefix-lists",
+					"protocol": "https",
+					"host": [
+						"{{nsxmgr}}"
+					],
+					"path": [
+						"policy",
+						"api",
+						"v1",
+						"infra",
+						"tier-0s",
+						"{{tier-0-id}}",
+						"prefix-lists"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Create Prefix List",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"description\": \"Stretched network filter - /32s in 192.168.70.0/24\",\r\n    \"display_name\": \"{192.168.70.0_24}\",\r\n    \"id\": \"{{prefix-list-id}}\",\r\n    \"prefixes\": [ \r\n    {\r\n        \"action\": \"DENY\",\r\n        \"ge\": 32,\r\n        \"network\": \"192.168.70.0/24\"\r\n    },\r\n    {\r\n        \"action\": \"PERMIT\",\r\n        \"network\": \"ANY\"\r\n    }\r\n    ]\r\n}\r\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{nsxmgr}}/policy/api/v1/infra/tier-0s/{{tier-0-id}}/prefix-lists/:prefix-list-id",
+					"protocol": "https",
+					"host": [
+						"{{nsxmgr}}"
+					],
+					"path": [
+						"policy",
+						"api",
+						"v1",
+						"infra",
+						"tier-0s",
+						"{{tier-0-id}}",
+						"prefix-lists",
+						":prefix-list-id"
+					],
+					"variable": [
+						{
+							"key": "prefix-list-id",
+							"value": "stretch-filter"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Attach Route Filter",
+			"request": {
+				"method": "PATCH",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n            \"neighbor_address\": \"169.254.111.5\",\r\n            \"remote_as_num\": \"65010\",\r\n            \"keep_alive_time\": 60,\r\n            \"hold_down_time\": 180,\r\n            \"allow_as_in\": false,\r\n            \"maximum_hop_limit\": 1,\r\n            \"resource_type\": \"BgpNeighborConfig\",\r\n            \"id\": \"f3eec340-e402-11ea-8356-ab0cb657a449\",\r\n            \"route_filtering\": [ {\r\n                \"address_family\": \"IPV4\",\r\n                \"enabled\": \"true\",\r\n                \"out_route_filters\": [ \"/infra/tier-0s/vmc/prefix-lists/stretch-filter\" ]\r\n            }],\r\n            \"display_name\": \"f3eec340-e402-11ea-8356-ab0cb657a449\",\r\n            \"path\": \"/infra/tier-0s/vmc/locale-services/default/bgp/neighbors/f3eec340-e402-11ea-8356-ab0cb657a449\",\r\n            \"relative_path\": \"f3eec340-e402-11ea-8356-ab0cb657a449\",\r\n            \"parent_path\": \"/infra/tier-0s/vmc/locale-services/default/bgp\",\r\n            \"marked_for_delete\": false,\r\n            \"overridden\": false\r\n        }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{nsxmgr}}/policy/api/v1/infra/tier-0s/{{tier-0-id}}/locale-services/{{locale-service-id}}/bgp/neighbors/:neighborid",
+					"protocol": "https",
+					"host": [
+						"{{nsxmgr}}"
+					],
+					"path": [
+						"policy",
+						"api",
+						"v1",
+						"infra",
+						"tier-0s",
+						"{{tier-0-id}}",
+						"locale-services",
+						"{{locale-service-id}}",
+						"bgp",
+						"neighbors",
+						":neighborid"
+					],
+					"variable": [
+						{
+							"key": "neighborid",
+							"value": "f3eec340-e402-11ea-8356-ab0cb657a449"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{access_token}}",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	]
+}
